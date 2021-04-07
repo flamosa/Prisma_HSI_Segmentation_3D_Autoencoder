@@ -12,7 +12,8 @@ class CAE3D(object ):
           tf.config.experimental.set_memory_growth(gpus[0], True )
 
           input_shape = ( nFreqBands, blk_size, blk_size, 1 )
-          input_layer = Input(input_shape, batch_size=None )
+          input_layer = Input(input_shape, batch_size=batch_sz )
+          print (input_layer)
           encoding_conv_1 = layers.Conv3D(filters=nbInputPatterns,
                                           kernel_size=(nFreqBands-4, 3, 3),
                                           strides=(1,1,1),
@@ -58,7 +59,7 @@ class CAE3D(object ):
 
           self._model = Model(input_layer, decoding_conv_2)
           self._model.summary()
-          self._model.compile(optimizer='adadelta', loss='binary_crossentropy')
+          self._model.compile(optimizer='Adam', loss='binary_crossentropy')
 
      def train(self, input_train, input_test, batch_size, epochs ):
           print ( 'Input train data set: ', input_train.shape)

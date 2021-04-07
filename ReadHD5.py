@@ -279,8 +279,9 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
 
 
     #Create training samples: blk_size x blk_size x 239 blocks -> (1000/blk_size) x (1000/blk_size) blocks
-    block_size = 5
-    nbr_blocks = 1000 / block_size
+    block_size = int(10)
+    nbr_blocks = int(1000 / block_size)
+
     samples_trg = []
     for col in range(nbr_blocks):
         for row in range(nbr_blocks):
@@ -301,7 +302,8 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
    # IO_Dims = feature_train.shape
     latent_vec_dims = np.array((25, 1))
     nbrFreqBands = samples_trg.shape[1]
-    autoEncode = HSI_Segment.CAE3D( nbInputPatterns=32,
+    batch_size = 50
+    autoEncode = HSI_Segment.CAE3D( nbInputPatterns=8,
                                     blk_size=block_size,
                                     drop_rate=0.5,
                                     drop_seed = 25,
@@ -309,11 +311,11 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
                                     nFreqBands = nbrFreqBands,
                                     data_format='channels_last',
                                     active_function='relu',
-                                    batch_sz = 20 )
+                                    batch_sz = batch_size )
 
-    loss = autoEncode.train(samples_trg, samples_test, batch_size=20, epochs=20)
+    loss = autoEncode.train(samples_trg, samples_test, batch_size=batch_size, epochs=20)
 
-    encoded_imgs = autoEncode.getEncodedImage(samples_test)
+    encoded_imgs = autoEncode.getDecodedImage(samples_test)
     print ( 'encoded image dims: ', encoded_imgs.shape )
     #Reorder images into full 1k x 1k image(s)
  #   decoded_imgs = autoEncode.getDecodedImage(encoded_imgs)
