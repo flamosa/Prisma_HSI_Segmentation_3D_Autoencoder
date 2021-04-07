@@ -277,9 +277,8 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
     spectrum_test=spectrum_test/65535.0
 
 
-
     #Create training samples: blk_size x blk_size x 239 blocks -> (1000/blk_size) x (1000/blk_size) blocks
-    block_size = int(10)
+    block_size = int(5)
     nbr_blocks = int(1000 / block_size)
 
     samples_trg = []
@@ -302,8 +301,8 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
    # IO_Dims = feature_train.shape
     latent_vec_dims = np.array((25, 1))
     nbrFreqBands = samples_trg.shape[1]
-    batch_size = 50
-    autoEncode = HSI_Segment.CAE3D( nbInputPatterns=8,
+    batch_size = 10
+    autoEncode = HSI_Segment.CAE3D( nbInputPatterns=32,
                                     blk_size=block_size,
                                     drop_rate=0.5,
                                     drop_seed = 25,
@@ -315,7 +314,7 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
 
     loss = autoEncode.train(samples_trg, samples_test, batch_size=batch_size, epochs=20)
 
-    encoded_imgs = autoEncode.getDecodedImage(samples_test)
+    encoded_imgs = autoEncode.getDecodedImage(encoded_imgs=samples_test, batch_sz=batch_size)
     print ( 'encoded image dims: ', encoded_imgs.shape )
     #Reorder images into full 1k x 1k image(s)
  #   decoded_imgs = autoEncode.getDecodedImage(encoded_imgs)

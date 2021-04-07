@@ -72,7 +72,7 @@ class CAE3D(object ):
                                  shuffle=True)
           return loss
 
-     def getDecodedImage ( self,encoded_imgs ):
-          decoded_image = self._model.predict(encoded_imgs)
+     def getDecodedImage ( self,encoded_imgs, batch_sz ):
+          decoded_image = self._model.predict(batch_size=batch_sz, x=encoded_imgs)
           return decoded_image
 
