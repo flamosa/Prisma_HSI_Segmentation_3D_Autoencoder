@@ -6,10 +6,21 @@ from tensorflow.keras.models import Model
 
 
 class CAE3D(object ):
-     def __init__(self, nbInputPatterns, blk_size, drop_rate, drop_seed,  encoded_dim, nFreqBands, data_format, active_function, batch_sz = 20):
+     def __init__(self,
+                  nbInputPatterns,
+                  blk_size,
+                  drop_rate,
+                  drop_seed,
+                  encoded_dim,
+                  nFreqBands,
+                  data_format,
+                  active_function,
+                  batch_sz = 20,
+                  modelFileName = None):
 
           gpus = tf.config.experimental.list_physical_devices('GPU')
           tf.config.experimental.set_memory_growth(gpus[0], True )
+          self._model_file_name = modelFileName
 
           input_shape = ( nFreqBands, blk_size, blk_size, 1 )
           input_layer = Input(input_shape, batch_size=batch_sz )
@@ -70,6 +81,9 @@ class CAE3D(object ):
                                  epochs=epochs,
                                  batch_size=batch_size,
                                  shuffle=True)
+
+          if self._model_file_name is not None:
+               self._model.save(self._model_file_name, save_format='h5')
           return loss
 
      def getDecodedImage ( self,encoded_imgs, batch_sz ):

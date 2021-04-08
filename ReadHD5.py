@@ -310,7 +310,8 @@ def main(NumberPrincipalComponents, numberCategories, outputFile):
                                     nFreqBands = nbrFreqBands,
                                     data_format='channels_last',
                                     active_function='relu',
-                                    batch_sz = batch_size )
+                                    batch_sz = batch_size,
+                                    modelFileName='Model_Conv32_Batch10_drop_0_5_blk_size_5.h5' )
 
     loss = autoEncode.train(samples_trg, samples_test, batch_size=batch_size, epochs=20)
 
